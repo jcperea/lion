@@ -28,17 +28,21 @@ export function runFormatMixinSuite(customConfig) {
     const options = { type: cfg.modelValueType, toggleValue: false, ...opts };
     switch (options.type) {
       case Number:
-        return options.toggleValue ? '123' : '456';
+        return !options.toggleValue ? '123' : '456';
       case Date:
-        return options.toggleValue ? new Date() : new Date('5-5-2005');
+        return !options.toggleValue ? new Date() : new Date('5-5-2005');
       case Array:
-        return options.toggleValue ? ['foo', 'bar'] : ['baz', 'yay'];
+        return !options.toggleValue ? ['foo', 'bar'] : ['baz', 'yay'];
       case Object:
-        return options.toggleValue ? { foo: 'bar' } : { bar: 'foo' };
+        return !options.toggleValue ? { foo: 'bar' } : { bar: 'foo' };
       case Boolean:
-        return options.toggleValue;
+        return !options.toggleValue;
+      case 'email':
+        return !options.toggleValue ? 'some-user@ing.com' : 'another-user@ing.com';
+      case 'iban':
+        return !options.toggleValue ? 'SE3550000000054910000003' : 'CH9300762011623852957';
       default:
-        return options.toggleValue ? 'foo' : 'bar';
+        return !options.toggleValue ? 'foo' : 'bar';
     }
   }
 
@@ -263,12 +267,14 @@ export function runFormatMixinSuite(customConfig) {
       });
 
       it('will only call the parser for defined values', async () => {
+        const generatedValue = generateValueBasedOnType();
         const parserSpy = sinon.spy();
         const el = await fixture(html`
           <${elem} .parser="${parserSpy}">
-            <input slot="input" value="string">
+            <input slot="input" value="${generatedValue}">
           </${elem}>
         `);
+
         expect(parserSpy.callCount).to.equal(1);
         // This could happen for instance in a reset
         el.modelValue = undefined;
