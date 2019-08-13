@@ -4,7 +4,7 @@ import '../lion-input-amount.js';
 
 const tagString = 'lion-input-amount';
 
-describe.only('<lion-input-amount> integrations', () => {
+describe('<lion-input-amount> integrations', () => {
   runInteractionStateMixinSuite({
     tagString,
     suffix: 'lion-input-amount',

@@ -304,8 +304,9 @@ export function runFormatMixinSuite(customConfig) {
         `);
         expect(formatterSpy.callCount).to.equal(1);
 
-        // Ensure errorState is always false by putting a validator on it that always returns false.
-        // Setting errorState = true here will not work if the component has errorValidators
+        el.errorState = true;
+        // Ensure errorState is always true by putting a validator on it that always returns false.
+        // Setting errorState = true is not enough if the element has errorValidators (uses ValidateMixin)
         // that set errorState back to false when the user input is mimicked.
         const alwaysInvalidator = () => ({ 'always-invalid': false });
         el.errorValidators = [alwaysInvalidator];
